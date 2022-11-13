@@ -2,8 +2,10 @@ EECE 5552 final project remote repository
 
 Collaborators:
 
-Abdusattor Sattarov
+- Abdusattor Sattarov
 
-Robert Sylvia
+- Robert Sylvia
 
-Justin Li
+- Justin Li
+
+- Charleen Muyot
