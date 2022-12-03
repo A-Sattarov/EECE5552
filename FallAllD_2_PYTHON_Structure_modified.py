@@ -55,11 +55,12 @@ for i in range(LL):
 os.chdir(oldDir)
 
 
-FallAllD = pd.DataFrame(list(zip(l_SubjectID,l_Device,l_ActivityID,l_TrialNo,l_Acc,l_Gyr,l_Mag,l_Bar)), 
-               columns =['SubjectID', 'Device','ActivityID','TrialNo','Acc','Gyr','Mag','Bar']) 
+FallAllD = pd.DataFrame(list(zip(l_SubjectID,l_Device,l_ActivityID,l_TrialNo,l_Acc,l_Gyr,l_Mag,l_Bar)), columns =['SubjectID', 'Device','ActivityID','TrialNo','Acc','Gyr','Mag','Bar'])
 
 FallAllD.to_pickle('FallAllD.pkl')
 FallAllD.to_hdf('FallAllD.h5', key='df', mode='w')
+print(FallAllD)
+
 # to import data use:
 #FallAllD = pd.read_pickle('FallAllD.pkl')
 #FallAllD = pd.read_hdf('FallAllD.h5', 'df')
