@@ -4,10 +4,10 @@ import pickle
 import io
 import pandas as pd
 
-# f = pd.read_pickle('FallAllD.pkl')
-f = pd.read_hdf('FallAllD.h5', 'df')
-df = pd.DataFrame(f, columns = ['SubjectID', 'Device', 'ActivityID', 'TrialNo', 'Acc', 'Gyr', 'Mag', 'Bar'])
-# f = h5py.File('FallAllD.h5', 'r')
+f = pd.read_pickle('FallAllD.pkl')
+# f = pd.read_hdf('FallAllD.h5', 'df')
+# df = pd.DataFrame(f, columns = ['SubjectID', 'Device', 'ActivityID', 'TrialNo', 'Acc', 'Gyr', 'Mag', 'Bar'])
 
-print(df)
-print(f)
+f.to_csv("data/data.csv")
+
+print(pd.read_csv('data/data.csv'))
