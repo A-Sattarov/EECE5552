@@ -1,4 +1,6 @@
 # Ignore the following directories/files
+__pycache__/
+.idea/
 FallAllD/
 FallAllD.h5
 FallAllD.pkl
