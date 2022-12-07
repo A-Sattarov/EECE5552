@@ -1,0 +1,4 @@
+# Ignore the following directories/files
+FallAllD/
+FallAllD.h5
+FallAllD.pkl
