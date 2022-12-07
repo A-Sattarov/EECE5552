@@ -2,12 +2,11 @@ import numpy as np
 import h5py
 import pickle
 import io
+from feature_extraction import *
 import pandas as pd
 
 f = pd.read_pickle('FallAllD.pkl')
-# f = pd.read_hdf('FallAllD.h5', 'df')
-# df = pd.DataFrame(f, columns = ['SubjectID', 'Device', 'ActivityID', 'TrialNo', 'Acc', 'Gyr', 'Mag', 'Bar'])
 
-f.to_csv("data/data.csv")
+flat_frame, Act_ID = process_raw(f)
 
-print(pd.read_csv('data/data.csv'))
+print(flat_frame)
