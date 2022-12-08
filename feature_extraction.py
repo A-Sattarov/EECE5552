@@ -7,7 +7,7 @@ import pandas as pd
 #n determined by freq_select variable
 
 def max_freq(data, sample_freq):
-    freq_select = 6
+    freq_select = 8
     freq_bin = abs(sp.fft.fft(data))
     N = len(freq_bin)
     if (N % 2) == 0:
@@ -36,6 +36,11 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
     Acc_max = []
     Acc_min = []
     Acc_range = []
+    Gyr_std = []
+    Gyr_mean = []
+    Gyr_max = []
+    Gyr_min = []
+    Gyr_range = []
     Act =[]
 
     dev = raw_fall_data.Device
@@ -49,13 +54,22 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
         stop = len(raw_fall_data.Acc[i])
 
 
-        max_array = np.array([max(abs(raw_fall_data.Acc[i][start:stop,0])), max(abs(raw_fall_data.Acc[i][start:stop,1])), max(abs(raw_fall_data.Acc[i][start:stop,2]))])
-        min_array = np.array(
+        Acc_max_array = np.array([max(raw_fall_data.Acc[i][start:stop,0]), max(raw_fall_data.Acc[i][start:stop,1]), max(raw_fall_data.Acc[i][start:stop,2])])
+        Acc_min_array = np.array(
             [min(raw_fall_data.Acc[i][start:stop, 0]), min(raw_fall_data.Acc[i][start:stop, 1]),
              min(raw_fall_data.Acc[i][start:stop, 2])])
-        Acc_max.append(max_array)
-        Acc_min.append(min_array)
-        Acc_range.append(max_array - min_array)
+        Acc_max.append(Acc_max_array)
+        Acc_min.append(Acc_min_array)
+        Acc_range.append(Acc_max_array - Acc_min_array)
+
+        Gyr_max_array = np.array([max(raw_fall_data.Gyr[i][start:stop, 0]), max(raw_fall_data.Gyr[i][start:stop, 1]),
+                                  max(raw_fall_data.Gyr[i][start:stop, 2])])
+        Gyr_min_array = np.array(
+            [min(raw_fall_data.Gyr[i][start:stop, 0]), min(raw_fall_data.Gyr[i][start:stop, 1]),
+             min(raw_fall_data.Gyr[i][start:stop, 2])])
+        Gyr_max.append(Gyr_max_array)
+        Gyr_min.append(Gyr_min_array)
+        Gyr_range.append(Gyr_max_array - Gyr_min_array)
 
         Acc_mean_array = np.array(
             [np.mean(raw_fall_data.Acc[i][start:stop, 0]), np.mean(raw_fall_data.Acc[i][start:stop, 1]),
@@ -65,20 +79,32 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
             [np.std(raw_fall_data.Acc[i][start:stop, 0]), np.std(raw_fall_data.Acc[i][start:stop, 1]),
              np.std(raw_fall_data.Acc[i][start:stop, 2])])
 
+        Gyr_mean_array = np.array(
+            [np.mean(raw_fall_data.Gyr[i][start:stop, 0]), np.mean(raw_fall_data.Gyr[i][start:stop, 1]),
+             np.mean(raw_fall_data.Gyr[i][start:stop, 2])])
+
+        Gyr_std_array = np.array(
+            [np.std(raw_fall_data.Gyr[i][start:stop, 0]), np.std(raw_fall_data.Gyr[i][start:stop, 1]),
+             np.std(raw_fall_data.Gyr[i][start:stop, 2])])
+
         Acc_mean.append(Acc_mean_array)
         Acc_std.append(Acc_std_array)
-        #Gyr_max.append(np.array([max(abs(raw_fall_data.Gyr[i][ start:stop, 0])), max(abs(raw_fall_data.Gyr[i][ start:stop, 1])), max(abs(raw_fall_data.Acc[i][ start:stop, 2]))]))
+        Gyr_mean.append(Acc_mean_array)
+        Gyr_std.append(Acc_std_array)
         #Act.append(activity_dict[raw_fall_data.ActivityID[i]])
         Act.append(raw_fall_data.ActivityID[i])
         #prev_act.append(prev_activity_dict[raw_fall_data.ActivityID[i]])
 
     Acc_max_w = []
-    #Gyr_max_w = []
+    Gyr_max_w = []
     Acc_min_w = []
     Acc_mean_w = []
     Acc_std_w = []
     Acc_range_w = []
-    #Gyr_freq_w = []
+    Gyr_min_w = []
+    Gyr_mean_w = []
+    Gyr_std_w = []
+    Gyr_range_w = []
     Act_comp = []
     prev_act_comp = []
     for i in range(len(raw_fall_data)):
@@ -92,6 +118,12 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
             Acc_std_w.append(Acc_std[i])
             Acc_range_w.append(Acc_range[i])
 
+            Gyr_max_w.append(Gyr_max[i])
+            Gyr_min_w.append(Gyr_min[i])
+            Gyr_mean_w.append(Gyr_mean[i])
+            Gyr_std_w.append(Gyr_std[i])
+            Gyr_range_w.append(Gyr_range[i])
+
 
 
     Acc_max_w = np.array(Acc_max_w)
@@ -99,12 +131,17 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
     Acc_mean_w = np.array(Acc_mean_w)
     Acc_std_w = np.array(Acc_std_w)
     Acc_range_w = np.array(Acc_range_w)
+    Gyr_max_w = np.array(Gyr_max_w)
+    Gyr_min_w = np.array(Gyr_min_w)
+    Gyr_mean_w = np.array(Gyr_mean_w)
+    Gyr_std_w = np.array(Gyr_std_w)
+    Gyr_range_w = np.array(Gyr_range_w)
     # Remember to add prev activity IDs
     # feature_frame = pd.DataFrame(list(zip(Act_comp,prev_act_comp,Acc_max_w,Gyr_max_w,Acc_freq_w,Gyr_freq_w)),
     #                            columns= ['Activity_ID','Prev_Act_ID','W_Acc_max','W_Gyr_max','W_Acc_freq','W_Gyr_freq'])
 
-    feature_frame = pd.DataFrame(list(zip(Act_comp, Acc_max_w, Acc_min_w,Acc_mean_w,Acc_std_w,Acc_range_w)),
-                                 columns=['Activity_ID', 'W_Acc_max', 'W_Acc_min','W_Acc_mean','W_Acc_std','W_Acc_range'])
+    feature_frame = pd.DataFrame(list(zip(Act_comp, Acc_max_w, Acc_min_w,Acc_mean_w,Acc_std_w,Acc_range_w, Gyr_max_w, Gyr_min_w,Gyr_mean_w,Gyr_std_w,Gyr_range_w)),
+                                 columns=['Activity_ID', 'W_Acc_max', 'W_Acc_min','W_Acc_mean','W_Acc_std','W_Acc_range', 'W_Gyr_max', 'W_Gyr_min','W_Gyr_mean','W_Gyr_std','W_Gyr_range'])
     return feature_frame
 
 
@@ -116,7 +153,7 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
 def get_features(raw_fall_data, activity_dict, prev_activity_dict, sample_rate):
 
 
-    win_time = 7
+    win_time = 18
     Acc_max = []
     Gyr_max = []
     Act = []
@@ -138,8 +175,10 @@ def get_features(raw_fall_data, activity_dict, prev_activity_dict, sample_rate):
                 center = len(raw_fall_data.Acc[i][:, 2]) -ran
 
         # Allows definition of start and stop to only look at part of signal, currently set to look at a window around y axis acceleration peak
-        start = int(center-ran)
-        stop = int(center+ran)
+        #start = int(center-ran)
+        #stop = int(center+ran)
+        start = 0
+        stop = len(raw_fall_data.Acc)
 
 
         Acc_max.append(np.array([max(abs(raw_fall_data.Acc[i][start:stop,0])), max(abs(raw_fall_data.Acc[i][start:stop,1])), max(abs(raw_fall_data.Acc[i][start:stop,2]))]))
@@ -190,10 +229,10 @@ def flatten_frame(data_set):
     flat_data_list = []
 
     for i in range(len(data_set)):
-        entry_max = np.concatenate((np.asarray(data_set.W_Acc_max[i]),np.asarray(data_set.W_Gyr_max[i])))
-        entry_freq = np.concatenate((data_set['W_Acc_freq'][i].flatten(),data_set['W_Gyr_freq'][i].flatten()))
-        entry = np.concatenate((entry_max,entry_freq))
-        flat_data_list.append(entry)
+        entry_Acc = np.concatenate((np.asarray(data_set.W_Acc_max[i]),data_set['W_Acc_freq'][i].flatten()))
+        entry_Gyr = np.concatenate((np.asarray(data_set.W_Gyr_max[i]),data_set['W_Gyr_freq'][i].flatten()))
+        entry = np.concatenate((entry_Acc,entry_Gyr))
+        flat_data_list.append(entry_Acc)
         print(flat_data_list[i].shape)
 
     flat_frame = pd.DataFrame(flat_data_list)
@@ -206,8 +245,14 @@ def flatten_frame_alt(data_set):
     for i in range(len(data_set)):
         entry_max = np.concatenate((np.asarray(data_set.W_Acc_max[i]),np.asarray(data_set.W_Acc_min[i])))
         entry_var = np.concatenate((np.asarray(data_set.W_Acc_mean[i]),np.asarray(data_set.W_Acc_std[i])))
-        entry = np.concatenate((entry_max,entry_var,data_set.W_Acc_range[i]))
-        flat_data_list.append(entry)
+        entry_acc = np.concatenate((entry_max,entry_var,data_set.W_Acc_range[i]))
+
+        entry_max = np.concatenate((np.asarray(data_set.W_Gyr_max[i]), np.asarray(data_set.W_Gyr_min[i])))
+        entry_var = np.concatenate((np.asarray(data_set.W_Gyr_mean[i]), np.asarray(data_set.W_Gyr_std[i])))
+        entry_gyr = np.concatenate((entry_max, entry_var, data_set.W_Gyr_range[i]))
+
+        entry = np.concatenate((entry_acc,entry_gyr))
+        flat_data_list.append(entry_acc)
         print(flat_data_list[i].shape)
 
     flat_frame = pd.DataFrame(flat_data_list)
