@@ -4,3 +4,4 @@ __pycache__/
 FallAllD/
 FallAllD.h5
 FallAllD.pkl
+*.mat
