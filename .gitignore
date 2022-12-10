@@ -1,5 +1,6 @@
 # Ignore the following directories/files
 __pycache__/
+venv/
 .idea/
 FallAllD/
 FallAllD.h5
