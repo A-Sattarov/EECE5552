@@ -25,6 +25,13 @@ def max_freq(data, sample_freq):
     return np.array([max_freq, max_freq_mag])
     #return max_freq
 
+
+def act_class(ID):
+    if ID >= 100:
+        return True
+    else:
+        return False
+
 #Gets features from data set
 #These features based around mean and distribution features
 #Still incomplete as it only looks at acceleration,but it seems much better - Robert
@@ -43,15 +50,29 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
     Gyr_range = []
     Act =[]
 
+    win_time = 8
+    sample_rate =238
+
     dev = raw_fall_data.Device
     trial_no = raw_fall_data.TrialNo
     sub_id = raw_fall_data.SubjectID
 
     for i in range(len(raw_fall_data)):
 
+        center = np.argmax(np.sum(raw_fall_data.Acc[i]**2, axis= 1))
+        ran = np.round(win_time / 2 * sample_rate)
+        if center < ran:
+            center = ran;
+        else:
+            if (len(raw_fall_data.Acc[i][:, 2]) - center) < ran:
+                center = len(raw_fall_data.Acc[i][:, 2]) - ran
+
         #Allows definition of start and stop to only look at part of signal, currently set to cover entire signal
-        start = 0
-        stop = len(raw_fall_data.Acc[i])
+        #start = 0
+        #stop = len(raw_fall_data.Acc[i])
+
+        start = int(center-ran)
+        stop = int(center+ran)
 
 
         Acc_max_array = np.array([max(raw_fall_data.Acc[i][start:stop,0]), max(raw_fall_data.Acc[i][start:stop,1]), max(raw_fall_data.Acc[i][start:stop,2])])
@@ -89,10 +110,10 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
 
         Acc_mean.append(Acc_mean_array)
         Acc_std.append(Acc_std_array)
-        Gyr_mean.append(Acc_mean_array)
-        Gyr_std.append(Acc_std_array)
+        Gyr_mean.append(Gyr_mean_array)
+        Gyr_std.append(Gyr_std_array)
         #Act.append(activity_dict[raw_fall_data.ActivityID[i]])
-        Act.append(raw_fall_data.ActivityID[i])
+        Act.append(act_class(raw_fall_data.ActivityID[i]))
         #prev_act.append(prev_activity_dict[raw_fall_data.ActivityID[i]])
 
     Acc_max_w = []
@@ -166,7 +187,7 @@ def get_features(raw_fall_data, activity_dict, prev_activity_dict, sample_rate):
 
     for i in range(len(raw_fall_data)):
         #Identifies window around y axis acceleration
-        center = np.argmax(abs(raw_fall_data.Acc[i][:, 1]))
+        center = np.argmax(np.sum(raw_fall_data.Acc[i]**2, axis= 1))
         ran = np.round(win_time/2*sample_rate)
         if center<ran:
             center =ran;
@@ -232,7 +253,7 @@ def flatten_frame(data_set):
         entry_Acc = np.concatenate((np.asarray(data_set.W_Acc_max[i]),data_set['W_Acc_freq'][i].flatten()))
         entry_Gyr = np.concatenate((np.asarray(data_set.W_Gyr_max[i]),data_set['W_Gyr_freq'][i].flatten()))
         entry = np.concatenate((entry_Acc,entry_Gyr))
-        flat_data_list.append(entry_Acc)
+        flat_data_list.append(entry)
         print(flat_data_list[i].shape)
 
     flat_frame = pd.DataFrame(flat_data_list)
@@ -252,6 +273,7 @@ def flatten_frame_alt(data_set):
         entry_gyr = np.concatenate((entry_max, entry_var, data_set.W_Gyr_range[i]))
 
         entry = np.concatenate((entry_acc,entry_gyr))
+        entry2 = np.concatenate((entry_acc, entry_max))
         flat_data_list.append(entry_acc)
         print(flat_data_list[i].shape)
 
