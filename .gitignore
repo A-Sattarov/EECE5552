@@ -6,3 +6,5 @@ FallAllD/
 FallAllD.h5
 FallAllD.pkl
 *.mat
+linear_regression.py
+.DS_Store
