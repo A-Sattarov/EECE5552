@@ -54,7 +54,7 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
     Gyr_range = []
     Act =[]
 
-    win_time = 8
+    win_time = 7
     sample_rate =238
 
     dev = raw_fall_data.Device
