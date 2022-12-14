@@ -7,7 +7,7 @@ import pandas as pd
 #n determined by freq_select variable
 
 def max_freq(data, sample_freq):
-    freq_select = 8
+    freq_select = 6
     freq_bin = abs(sp.fft.fft(data))
     N = len(freq_bin)
     if (N % 2) == 0:
@@ -26,11 +26,15 @@ def max_freq(data, sample_freq):
     #return max_freq
 
 
+#Classifies activity into corresponding algorithm output
 def act_class(ID):
     if ID >= 100:
         return True
     else:
         return False
+
+
+
 
 #Gets features from data set
 #These features based around mean and distribution features
@@ -62,7 +66,7 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
         center = np.argmax(np.sum(raw_fall_data.Acc[i]**2, axis= 1))
         ran = np.round(win_time / 2 * sample_rate)
         if center < ran:
-            center = ran;
+            center = ran
         else:
             if (len(raw_fall_data.Acc[i][:, 2]) - center) < ran:
                 center = len(raw_fall_data.Acc[i][:, 2]) - ran
@@ -174,7 +178,7 @@ def get_features_alt(raw_fall_data, activity_dict, prev_activity_dict):
 def get_features(raw_fall_data, activity_dict, prev_activity_dict, sample_rate):
 
 
-    win_time = 18
+    win_time = 8
     Acc_max = []
     Gyr_max = []
     Act = []
@@ -195,17 +199,17 @@ def get_features(raw_fall_data, activity_dict, prev_activity_dict, sample_rate):
             if (len(raw_fall_data.Acc[i][:, 2])-center) < ran:
                 center = len(raw_fall_data.Acc[i][:, 2]) -ran
 
-        # Allows definition of start and stop to only look at part of signal, currently set to look at a window around y axis acceleration peak
-        #start = int(center-ran)
-        #stop = int(center+ran)
-        start = 0
-        stop = len(raw_fall_data.Acc)
+        # Allows definition of start and stop to only look at part of signal, currently set to look at a window around acceleration peak
+        start = int(center-ran)
+        stop = int(center+ran)
+        #start = 0
+        #stop = len(raw_fall_data.Acc)
 
 
         Acc_max.append(np.array([max(abs(raw_fall_data.Acc[i][start:stop,0])), max(abs(raw_fall_data.Acc[i][start:stop,1])), max(abs(raw_fall_data.Acc[i][start:stop,2]))]))
         Gyr_max.append(np.array([max(abs(raw_fall_data.Gyr[i][ start:stop, 0])), max(abs(raw_fall_data.Gyr[i][ start:stop, 1])), max(abs(raw_fall_data.Acc[i][ start:stop, 2]))]))
         #Act.append(activity_dict[raw_fall_data.ActivityID[i]])
-        Act.append(raw_fall_data.ActivityID[i])
+        Act.append(act_class(raw_fall_data.ActivityID[i]))
         #prev_act.append(prev_activity_dict[raw_fall_data.ActivityID[i]])
 
         Acc_freq_max = np.array([max_freq(raw_fall_data.Acc[i][start:stop,0],sample_rate),max_freq(raw_fall_data.Acc[i][start:stop,1],sample_rate),max_freq(raw_fall_data.Acc[i][start:stop,2],sample_rate)])
@@ -221,7 +225,7 @@ def get_features(raw_fall_data, activity_dict, prev_activity_dict, sample_rate):
     Act_comp = []
     prev_act_comp = []
     for i in range(len(raw_fall_data)):
-        if dev[i] == 'Waist':
+        if dev[i] == 'Neck':
             Act_comp.append(Act[i])
             #prev_act_comp.append(prev_act[i])
 
