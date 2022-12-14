@@ -6,6 +6,7 @@ import pandas as pd
 from scipy import fft
 from feature_extraction import *
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import f1_score, recall_score, precision_score
 from itertools import chain
 
 f = pd.read_pickle('FallAllD.pkl')
@@ -43,10 +44,16 @@ regressor = RandomForestRegressor(n_estimators = 100, random_state = 0)
 regressor.fit(train_data,train_class)
 
 results = np.round(regressor.predict(test_data))
+score = f1_score(test_class,results, average='weighted')
+rec = recall_score(test_class,results)
+prec = precision_score(test_class,results)
 counter = 0
+
 print(results)
 for i in range(len(results)):
     if (test_class[i] == results[i]):
         counter += 1
 print(counter/len(results))
-
+print(score)
+print(rec)
+print(prec)
