@@ -1,4 +1,6 @@
-# This is a sample Python script.
+# This is the python script to generate a MLP classifier
+#Robert Sylvia
+
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
@@ -33,6 +35,19 @@ def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
+#Just to see how much of test data are falls
+def percent_fall(activity):
+    fall = 0
+    no_fall =0
+    for i in activity:
+        if i == True:
+            fall += 1
+        else:
+            no_fall +=1
+
+    return fall/len(activity)
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
@@ -42,6 +57,7 @@ if __name__ == '__main__':
     raw_data['Acc'] = raw_data['Acc']*Acc_sen
     raw_data['Gyr'] = raw_data['Gyr'] * Gyr_sen
     sample_freq = 238
+
 
     data = feature_extraction.get_features_alt(raw_data,{},{})
     #data = feature_extraction.get_features(raw_data, {}, {},238)
@@ -64,9 +80,11 @@ if __name__ == '__main__':
 
     ypred = clf.predict(X_test)
     score = [accuracy_score(y_test,ypred),f1_score(y_test,ypred),recall_score(y_test,ypred),precision_score(y_test,ypred)]
+    print(percent_fall(y_test))
     print(ypred)
     print(score)
 
+    #Save classifier to be used elsewhere
     with open('MLP_model', 'wb') as f:
         pickle.dump(clf,f)
 

@@ -277,7 +277,7 @@ def flatten_frame_alt(data_set):
         entry_gyr = np.concatenate((entry_max, entry_var, data_set.W_Gyr_range[i]))
 
         entry = np.concatenate((entry_acc,entry_gyr))
-        entry2 = np.concatenate((entry_acc, entry_max))
+        entry2 = np.concatenate((entry_acc, np.asarray(data_set.W_Gyr_mean[i])))
         flat_data_list.append(entry_acc)
         print(flat_data_list[i].shape)
 
@@ -325,3 +325,15 @@ def process_raw(raw_data):
 
     flat_frame = pd.DataFrame(flat_data_list)
     return [flat_frame, Act_ID]
+
+#Very rough derivative estimate of sensor data
+def est_deriv(entry,sample_rate):
+
+    der_list = []
+    for i in range(len(entry)):
+        data = entry[i]
+        data_shift = np.concatenate((data[1:,:],[data[-1,:]]))
+        der = (data_shift-data)*sample_rate
+        der_list.append(der)
+
+    return der_list
